@@ -27,7 +27,7 @@
             </nav>
         </aside>
         <main class="main-content">
-            <h1>Bienvenido al Dashboard</h1>
+            <h1>Bienvenido al Dashboard!</h1>
             
 
 
