@@ -1,0 +1,667 @@
+.brand-logo img {
+    width: 150px
+}
+
+
+.bienvenida h1{
+    font-size: 4em;
+    text-align: center;
+    font-weight: 700;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+.button {
+    width: 100%;
+    max-width: 400px;
+    background-color: #263238;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #272e31;
+    transition : 0.3s   
+}
+
+
+.input {
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 400px;
+}
+li.active {
+    background-color: #757575!important;
+}
+.submenu {
+
+    position: absolute;
+    display: none;
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+    margin-top: 0px;
+    right: 0;
+    z-index: 1000;
+    width: fit-content;
+    max-width: 150px;;
+    
+}
+.submenu li{
+    background: #263238;
+    width: 100%;
+
+}
+ul li > a > i{
+    font-size: 36px;
+}
+.logmenu >a >i{
+    font-size: 18px !important;
+    margin: 0 !important;
+}
+
+.toggle-password-login {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #9e9e9e !important;
+    font-size: 24px !important;
+    z-index: 1000;
+}
+
+.input-field.password-container {
+    position: relative;
+}
+
+
+/* PENDIENTE--Estilos para los modales de login y registro */
+.formulario-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 60px 20px;
+    flex-wrap: wrap;
+}
+.modal {
+    border-radius: 10px !important;
+    max-width: 500px !important;
+}
+
+.modal .modal-content {
+    padding: 24px 30px !important;
+}
+
+.modal h4, .modal h5 {
+    color: #263238;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.modal .input-field {
+    margin-bottom: 25px;
+}
+
+.modal .input-field input {
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.modal .input-field input:focus {
+    border-color: #757575;
+    box-shadow: 0 1px 0 0 #757575;
+}
+
+.modal .input-field label {
+    left: 10px;
+    color: #9e9e9e;
+}
+
+.modal .input-field label.active {
+    color: #757575
+}
+
+.modal .btn {
+    width: 100%;
+    background-color: #757575;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    height: 45px;
+    line-height: 45px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.modal .btn:hover {
+    background-color: #757575;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.modal .modal-footer {
+    background-color: #f5f5f5;
+    border-radius: 0 0 10px 10px;
+    padding: 15px !important;
+}
+
+.modal .modal-close {
+    color: #757575;
+    font-weight: 500;
+}
+
+.modal .card-panel {
+    margin: 0 0 20px 0;
+    border-radius: 5px;
+}
+
+/* PENDIENTE--Estilos para el botón de mostrar/ocultar contraseña */
+.toggle-password-login, .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #9e9e9e !important;
+    font-size: 20px !important;
+    transition: color 0.3s ease;
+}
+
+.toggle-password-login:hover, .toggle-password:hover {
+    color: #9e9e9e !important;
+}
+
+/* Mensajes de error */
+.card-panel.red {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* Ajustes para el contenedor de contraseña */
+.input-field.password-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+#color-footer {
+  background-color: #1e1e1e; 
+}
+
+/* CSS FORMULARIO CONTACTOS*/
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #fffdfd;
+}
+
+.form-container h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 5px;
+    margin-bottom: 25px;
+    font-size: 1em;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    border-bottom: 2px solid #7f00ff;
+}
+
+.form-container button {
+    width: 100%;
+    background-color: #7f00ff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 15px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #5f00cc;
+}
+
+.image-container img {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.03);
+}
+
+.formulario-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    padding: 60px 20px;
+    flex-wrap: nowrap;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-container {
+    max-width: 400px;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 5px;
+    margin-bottom: 25px;
+    font-size: 1em;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    border-bottom: 2px solid #7f00ff;
+}
+
+.form-container button {
+    width: 100%;
+    background-color: #7f00ff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 15px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #5f00cc;
+}
+
+@media (max-width: 768px) {
+    .formulario-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/*CSS CARS*/
+.cars-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Aquí se adapta el número de columnas */
+    gap: 20px;
+    padding: 40px 20px;
+    justify-content: center;
+}
+
+.car-item {
+    max-width: 300px;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-image img {
+    width: 100%;
+    height: auto;
+    border-bottom: 2px solid #ccc;
+}
+
+.card-content {
+    padding: 15px;
+    background-color: #fff;
+}
+
+.card-content p {
+    font-size: 1em;
+    margin: 10px 0;
+}
+
+.card-content strong {
+    font-weight: bold;
+    color: #333;
+}
+
+/*  CONTENEDOR PRINCIPAL DEL FORMULARIO Y LA IMAGEN  */
+.contact-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding: 20px;
+}
+
+/*  FORMULARIO DE CONTACTO  */
+.form-container {
+  width: 50%;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.form-container h2 {
+  font-size: 2em;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #7f00ff;
+}
+
+.form-container p {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px 5px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+  border-bottom: 2px solid #7f00ff;
+  background-color: transparent;
+}
+
+.form-container button {
+  width: 100%;
+  background-color: #7f00ff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 15px;
+  font-size: 1em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.form-container button:hover {
+  background-color: #5f00cc;
+  transform: translateY(-3px);
+}
+
+/*  CONTENEDOR DE IMAGEN EN CONTACTO  */
+.image-container {
+  width: 75%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+.image-container img {
+  max-width: 500px;
+  width: 250%;
+  border-radius: 0;
+  box-shadow: none;
+  transition: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+/*  RESPONSIVE  */
+@media (max-width: 768px) {
+  .contact-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-container, .image-container {
+    width: 100%;
+  }
+}
+
+/*  LÍNEA DIVISORA VERTICAL ENTRE FORMULARIO E IMAGEN  */
+.divider-line {
+  width: 2px;
+  background-color: #ddd;
+  height: 80vh;
+  margin: 0 30px;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+
+.divider-line:hover {
+  background-color: #7f00ff;
+}
+
+/*  EFECTO DECORATIVO AL PASAR EL MOUSE POR CONTENEDOR  */
+.contact-form-container::after {
+  content: '';
+  display: block;
+  width: 2px;
+  background-color: #ddd;
+  height: 80vh;
+  margin: 40px auto;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+
+.contact-form-container:hover::after {
+  background-color: #7f00ff;
+}
+
+/*  MENSAJE DE CONFIRMACIÓN AL ENVIAR FORMULARIO  */
+.mensaje-enviado {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in-out;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.mensaje-enviado.mostrar {
+  opacity: 1;
+  visibility: visible;
+}
+
+/*  CONTENEDOR PRINCIPAL DE CITAS  */
+.citas-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding: 20px;
+}
+
+/*  FORMULARIO DE CITAS  */
+
+.citas-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 0 auto 40px auto;
+  padding: 20px;
+  max-width: 1200px; 
+  box-sizing: border-box;
+}
+
+.citas-container {
+  width: 50%;
+  max-width: 500px;
+  margin: 0 auto; 
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+
+
+.citas-container h3 {
+  color: #333;
+  font-size: 2em;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #7f00ff;
+}
+
+.citas-container p {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.citas-container input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px 5px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.citas-container input:focus {
+  border-bottom: 2px solid #7f00ff;
+  background-color: transparent;
+}
+
+.citas-container button {
+  width: 100%;
+  background-color: #7f00ff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 15px;
+  font-size: 1em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.citas-container button:hover {
+  background-color: #5f00cc;
+  transform: translateY(-3px);
+}
+
+/*CONTENEDOR DE IMAGEN EN CITAS*/
+.citas-image-container {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+.citas-image-container img {
+  max-width: 1000px;
+  width: 250%;
+  border-radius: 0;
+  box-shadow: none;
+  transition: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+/*RESPONSIVE PARA CITAS*/
+@media (max-width: 768px) {
+  .citas-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .citas-container, .citas-image-container {
+    width: 100%;
+  }
+}
+
+.subtitulo {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    color: #555;
+    margin-top: 10px;
+}
