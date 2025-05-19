@@ -1,0 +1,235 @@
+/* button delet */
+.button-delet {
+  position: relative;
+  border-radius: 6px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cc0000;
+  background-color: #e50000;
+  overflow: hidden;
+}
+
+.button-delet,
+.button__icon,
+.button__text {
+  transition: all 0.3s;
+}
+
+.button-delet .button__text {
+  transform: translateX(35px);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button-delet .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #cc0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-delet .svg {
+  width: 20px;
+}
+
+.button:hover {
+  background: #cc0000;
+}
+
+.button-delet:hover .button__text {
+  color: transparent;
+}
+
+.button-delet:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button-delet:active .button__icon {
+  background-color: #b20000;
+}
+
+.button-delet:active:active {
+  border: 1px solid #b20000;
+}
+/* button save */
+
+.button-edit {
+  position: relative;
+  border-radius: 6px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #0e83f8;
+  background-color: #0e83f8;
+  overflow: hidden;
+}
+
+.button-edit,
+.button__icon,
+.button__text {
+  transition: all 0.3s;
+}
+
+.button-edit .button__text {
+  transform: translateX(35px);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button-edit .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #04519d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-edit .svg {
+  width: 20px;
+}
+
+.button-edit:hover {
+  background: #04519d;
+}
+
+.button-edit:hover .button__text {
+  color: transparent;
+}
+
+.button-edit:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button-edit:active .button__icon {
+  background-color: #0e83f8;
+}
+
+.button-edit:active:active {
+  border: 1px solid #0e83f8;
+}
+
+
+.button-save,
+.button__icon,
+.button__text {
+  transition: all 0.3s;
+}
+
+.button-save .button__text {
+  transform: translateX(35px);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button-save .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #2abc02;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-save .svg {
+  width: 20px;
+}
+
+.button-save:hover {
+  background: #2abc02;
+}
+
+.button-save:hover .button__text {
+  color: transparent;
+}
+
+.button-save:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button-save:active .button__icon {
+  background-color: #2abc02;
+}
+
+.button-save:active:active {
+  border: 1px solid #2abc02;
+}
+/* button add */
+.button-add {
+  position: relative;
+  border-radius: 6px;
+  width: 200px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ae00ff;
+  background-color: #ae00ff;
+  overflow: hidden;
+}
+
+.button-add,
+.button__icon,
+.button__text {
+  transition: all 0.3s;
+}
+
+.button-add .button__text {
+  transform: translateX(35px);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button-add .button__icon {
+  position: absolute;
+  transform: translateX(159px);
+  height: 100%;
+  width: 39px;
+  background-color: #8400ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-add .svg {
+  width: 20px;
+}
+
+.button-addve:hover {
+  background: #8400ff;
+}
+
+.button-add:hover .button__text {
+  color: transparent;
+}
+
+.button-add:hover .button__icon {
+  width: 200px;
+  transform: translateX(0);
+}
+
+.button-add:active .button__icon {
+  background-color: #8400ff;
+}
+
+.button-add:active:active {
+  border: 1px solid #8400ff;
+}
+
+

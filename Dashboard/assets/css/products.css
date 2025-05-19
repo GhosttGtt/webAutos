@@ -1,0 +1,222 @@
+.productos-crud {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.crud-form {
+    margin-bottom: 30px;
+}
+
+.crud-form h2 {
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.product-form .form-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.product-form input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.btn-primary {
+    background-color: #8400ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #6a00cc;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.product-table th,
+.product-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-table th {
+    background-color: #8400ff;
+    color: white;
+}
+
+.product-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-save,
+.btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-edit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-save {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-edit:hover,
+.btn-save:hover,
+.btn-delete:hover {
+    opacity: 0.9;
+}
+
+.edit-mode {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .product-form .form-group {
+        flex-direction: column;
+    }
+
+    .product-form input {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .btn-edit,
+    .btn-save,
+    .btn-delete {
+        width: 100%;
+    }
+}
+
+
+/* Estilos para la imagen del producto */
+.product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para el input de archivo */
+.file-input-container {
+    margin: 15px 0;
+    width: 100%;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 2px dashed #8400ff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-label:hover {
+    background-color: #eee;
+    border-color: #6a00cc;
+}
+
+.file-label i {
+    font-size: 24px;
+    color: #8400ff;
+}
+
+.file-label span {
+    color: #666;
+}
+
+/* Ajustes para el formulario */
+.input-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.input-group input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Estilos para el botón de agregar */
+.button-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #8400ff; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.button-add:hover {
+    background-color: #6a00cc; 
+}
+
+.button-add .button__text {
+    font-weight: bold;
+}
+
+.button-add .button__icon i {
+    font-size: 20px; 
+    color: white;
+}
