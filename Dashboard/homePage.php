@@ -19,7 +19,7 @@
             <nav class="menu">
                 <ul>
                     <li><a href="?page=ventas">Ventas</a></li>
-                    <li><a href="?page=productos">Productos</a></li>
+                    <li><a href="?page=productos">Autos</a></li>
                     <li><a href="?page=clientes">Clientes</a></li>
                 </ul>
             </nav>
