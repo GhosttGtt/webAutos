@@ -31,9 +31,9 @@
       <div class="row">
         <div class="col s50 m3">
           <div>
+            <br>
+            <br>
             <h4 class="black-text" style="font-weight: bold;">Tu Ruta,</h4>
-            <h4 class="black-text" style="font-weight: bold;">Tu Carro,</h4>
-            <h4 class="black-text" style="font-weight: bold;">Tu Camino,</h4>
             <br><br><br><br>
             <h6 class="grey-text" style="font-weight: bold;">
               Es hora de cumplir tu sueño, ven a hacerlo realidad
@@ -41,50 +41,10 @@
           </div>
         </div>
 
-        <div class="col s50 m6">
-          <div class="center">
-            <img src="img/carroRojo.png" alt="Carro Rojo" style="width: 500px; height: auto;">               
-          </div>
-        </div>
-
-        <div class="col s50 m3">
-          <div class="right-align">
-            <a href="index.html">
-              <img src="img/burbujaServicio.png" alt="Burbuja" style="width: 150px; height: auto;">
-            </a>
-            <div class="right-align">
-              <h5 class="black-text" style="font-weight: bold; margin-bottom: 8px;">
-                12.5k personas
-              </h5>
-              <p class="black-text" style="font-size: 1.1rem; line-height: 1;">
-                Han utilizado nuestro servicio y recomiendan comprar con nosotros.
-              </p>
-            </div>
-          </div>
-        </div>
-
-<div class="section" style="height: 480px;"></div>
-
+    
 </div>
 
-            <!--AUTO-->
-            <div class="item" id="auto">
-              <div class="form-section">
-                       <?php include 'auto.php'; ?>
-                </div>
-       
-          <!--CONTACTO-->
-
-          <div class="item" id="Contacto">  
-              <div class="form-section">
-                       <?php include 'contacto.php'; ?>
-                </div>
-
-          <!--CITA-->
-
-          <div class="item" id="cita">
-                       <?php include 'cita.php'; ?>
-               </div>
+           
 
           <!--El pie de la página -->
 
@@ -114,6 +74,8 @@
                       </div>
                     </div>
                   </footer>
+    
+    
 
     <div id="modal1" class="modal bottom-sheet">
       <div class="modal-content">
@@ -126,27 +88,24 @@
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const menu = document.getElementById('menuFlotante');
-          const inicio = document.getElementById('Inicio');
+       document.addEventListener('DOMContentLoaded', function () {
+  const menu = document.getElementById('menuFlotante');
 
-          function verificarScroll() {
-            const limite = inicio.offsetTop + inicio.offsetHeight;
-            const scrollY = window.scrollY;
+  function mostrarMenuAlHacerScroll() {
+    if (window.scrollY > 0) {
+      menu.classList.remove('oculto');
+    } else {
+      menu.classList.remove('oculto'); // también visible al estar en la parte superior
+    }
+  }
 
-            if (scrollY < limite) {
-              menu.classList.add('oculto');
-            } else {
-              menu.classList.remove('oculto');
-            }
-          }
+  // Mostrar siempre al cargar
+  mostrarMenuAlHacerScroll();
 
-          // Verificamos al cargar
-          verificarScroll();
+  // Mostrar también al hacer scroll
+  window.addEventListener('scroll', mostrarMenuAlHacerScroll);
+});
 
-          // Verificamos al hacer scroll
-          window.addEventListener('scroll', verificarScroll);
-        });
 </script>
 
 

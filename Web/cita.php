@@ -9,6 +9,7 @@
 </head>
 <body>
    <div style='margin-top: 100px;'> 
+    <div class="section" style="height: 200px;"></div>
 <div class="citas-wrapper">   
     <div class="citas-container">
         <h3>Agenda tu Cita</h3>

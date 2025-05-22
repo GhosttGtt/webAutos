@@ -9,8 +9,12 @@ $menuItems = [
     'Autos' => '#auto',
     'Contacto' =>'#Contacto',
     'Cita' => '#cita',
-    'Quienes Somos' => 'quienes_somos.php', 
+    'Misión' => '#Misión', 
+    'Visión' => '#Visión', 
+    
+    
 ];
+
 ?>
 
 <head>
