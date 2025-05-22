@@ -65,7 +65,7 @@ if ($response === FALSE) {
                                 <p><strong>Año:</strong> {$car['year']}</p>
                                 <p><strong>Descripción:</strong> {$car['description']}</p>
                                 <p><strong>Precio:</strong> Q" . number_format($car['price'], 2) . "</p>
-                                <button class='button-masInfo');\">Más info</button>
+                                <button class='button-masInfo');\">Ver más</button>
 
                             </div>
                         </div>
@@ -88,7 +88,7 @@ if ($response === FALSE) {
                                 <p><strong>Modelo:</strong> {$car['model']}</p>
                                 <p><strong>Año:</strong> {$car['year']}</p>
                                 <p><strong>Precio:</strong> Q" . number_format($car['price'], 2) . "</p>
-                                 <button class='button-masInfo');\">Más info</button>
+                                 <button class='button-masInfo');\">Ver más</button>
                             </div>
                         </div>
                     </div>";

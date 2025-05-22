@@ -1,20 +1,27 @@
 <?php
-session_start();
-?>
+$currentPage = basename($_SERVER['PHP_SELF']);
 
-<?php
-$menuItems = [
-    
-    'Inicio' => '#Inicio',
-    'Autos' => '#auto',
-    'Contacto' =>'#Contacto',
-    'Cita' => '#cita',
-    'Misión' => '#Misión', 
-    'Visión' => '#Visión', 
-    
-    
-];
-
+if ($currentPage === 'index.php') {
+    // Si estás en index.php, los enlaces apuntan a secciones internas
+    $menuItems = [
+        'Inicio'   => '#Inicio',
+        'Autos'    => '#auto',
+        'Contacto' => '#Contacto',
+        'Cita'     => '#cita',
+        'Misión'   => 'mision.php',   // Aquí enlazas a otra página
+        'Visión'   => 'vision.php',   // Otra página
+    ];
+} else {
+    // En otras páginas, los enlaces vuelven al index con anclas
+    $menuItems = [
+        'Inicio'   => 'index.php#Inicio',
+        'Autos'    => 'index.php#auto',
+        'Contacto' => 'index.php#Contacto',
+        'Cita'     => 'index.php#cita',
+        'Misión'   => 'mision.php',
+        'Visión'   => 'vision.php',
+    ];
+}
 ?>
 
 <head>
@@ -44,12 +51,7 @@ $menuItems = [
                 </a>
             </li>
         </ul>
-    <?php else: ?>
-        <li>
-            <a class="dropdown-trigger" href="#" data-target="userDropdown">
-                <i class="material-icons">account_circle</i>
-            </a>
-        </li>
+  
         <ul id="userDropdown" class="dropdown-content">
             <li class="logmenu">
                 <a href="#loginModal" class="modal-trigger">

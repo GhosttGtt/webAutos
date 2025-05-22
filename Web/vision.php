@@ -12,8 +12,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
 
+
+  
   <body>
-    <div class="item" id="Inicio">
 </div>
 <nav id="menuFlotante" class="white oculto" style="position: fixed; top: 0; width: 100%; z-index: 1000;">
   <div class="container">
@@ -28,21 +29,45 @@
 </nav>
 
     <div class="container" style="margin-top: 40px;">
-      <div class="row">
-        <div class="col s50 m3">
           <div>
             <br>
             <br>
-            <h4 class="black-text" style="font-weight: bold;">Tu Ruta,</h4>
-            <br><br><br><br>
-            <h6 class="grey-text" style="font-weight: bold;">
-              Es hora de cumplir tu sueño, ven a hacerlo realidad
-            </h6>
+            <br>
+      <h4 class="black-text titulo-vision">AutoZone - Tu camino comienza aquí</h4>
+
+<h6 class="grey-text vision-texto">
+  "En AutoZone aspiramos a convertirnos en la empresa líder en el sector automotriz a nivel nacional e internacional, 
+  siendo reconocidos por ofrecer una experiencia de compra innovadora, accesible y totalmente centrada en las necesidades 
+  del cliente. Visualizamos un futuro donde adquirir un vehículo no solo sea una transacción, sino una vivencia cómoda, 
+  segura y emocionante, respaldada por un equipo profesional comprometido con la excelencia, la honestidad y el servicio 
+  personalizado."
+
+  <br><br>
+
+  Nuestro objetivo es posicionarnos como la primera opción para quienes buscan vehículos nuevos o seminuevos de alta calidad, 
+  ofreciendo una amplia gama de marcas, modelos y opciones de financiamiento, todo dentro de un entorno confiable y transparente. 
+  Queremos ser referentes en innovación tecnológica dentro del rubro automotriz, incorporando plataformas digitales, herramientas 
+  de atención remota y procesos ágiles que permitan a nuestros clientes acceder fácilmente al auto de sus sueños, desde cualquier lugar.
+
+  <br><br>
+
+  Creemos en una movilidad más sostenible, inclusiva y conectada con el entorno, por ello trabajamos continuamente para integrar 
+  vehículos híbridos, eléctricos y tecnologías ecológicas a nuestro catálogo, impulsando el cambio hacia una nueva era del transporte. 
+  En AutoZone, construimos hoy el camino hacia el futuro de la movilidad, donde cada persona pueda conducir con libertad, confianza y 
+  satisfacción total."
+</h6>
+
           </div>
         </div>
 
     
 </div>
+<br>
+<br>
+    <div class="imagenes-auto">
+      <img src="img/vision1.jpg" class="img-auto">
+      <img src="img/vision2.jpg" class="img-auto">
+    </div>
 
            
 

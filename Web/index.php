@@ -27,7 +27,9 @@
   </div>
 </nav>
 
+
     <div class="container" style="margin-top: 40px;">
+       <div class="section" style="height: 50px;"></div>
       <div class="row">
         <div class="col s50 m3">
           <div>
@@ -43,7 +45,11 @@
 
         <div class="col s50 m6">
           <div class="center">
-            <img src="img/carroRojo.png" alt="Carro Rojo" style="width: 500px; height: auto;">               
+            <img src="img/carroRojo.png" alt="Carro Rojo" style="width: 500px; height: auto;">    
+            <br><br><br><br><br>
+        <div style="display: flex; justify-content: center;">
+          <img src="img/modelos.png" alt="Modelos" style="width: 1000px; height: auto;">
+        </div>
           </div>
         </div>
 
@@ -86,7 +92,7 @@
                        <?php include 'cita.php'; ?>
                </div>
 
-          <!--El pie de la página -->
+          <!--PIE DE PAGINA -->
 
                         </div>
                       </div>                     
