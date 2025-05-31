@@ -42,25 +42,7 @@
 li.active {
     background-color: #757575!important;
 }
-.submenu {
 
-    position: absolute;
-    display: none;
-    background-color: #fff;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 0px;
-    margin-top: 0px;
-    right: 0;
-    z-index: 1000;
-    width: fit-content;
-    max-width: 150px;;
-    
-}
-.submenu li{
-    background: #263238;
-    width: 100%;
-
-}
 ul li > a > i{
     font-size: 36px;
 }
@@ -68,6 +50,35 @@ ul li > a > i{
     font-size: 18px !important;
     margin: 0 !important;
 }
+nav#menuFlotante {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1150px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  margin: 10px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.oculto {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+  .right-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);  
+  }
+
+
 
 .toggle-password-login {
     position: absolute;
@@ -274,6 +285,9 @@ body {
     gap: 50px;
     padding: 60px 20px;
     flex-wrap: nowrap;
+      justify-content: center; /* centra verticalmente */
+
+    height: 400px;
 }
 
 .image-container img {
@@ -336,7 +350,7 @@ body {
     }
 }
 
-/*CSS CARS*/
+
 .cars-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Aquí se adapta el número de columnas */
@@ -527,7 +541,7 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease-in-out;
-  background-color: #4caf50;
+  background-color: #6fd272;
   color: white;
   padding: 10px;
   border-radius: 5px;
@@ -626,7 +640,7 @@ body {
   transform: translateY(-3px);
 }
 
-/*CONTENEDOR DE IMAGEN EN CITAS*/
+
 .citas-image-container {
   width: 80%;
   display: flex;
@@ -647,7 +661,7 @@ body {
   pointer-events: none;
 }
 
-/*RESPONSIVE PARA CITAS*/
+
 @media (max-width: 768px) {
   .citas-wrapper {
     flex-direction: column;
@@ -664,4 +678,72 @@ body {
     font-size: 30px;
     color: #555;
     margin-top: 10px;
+}
+
+.button-masInfo {
+    position: absolute;
+    right: 15px; 
+    bottom: 15px; 
+    background-color: #7f00ff;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button-masInfo:hover {
+    background-color: #7f00ff;;
+}
+
+.titulo-vision {
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    max-width: 950px;
+    margin: 0 auto 40px auto;
+
+  }
+
+  .vision-texto {
+   font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.8;
+    color: #4a4a4a;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    text-align: justify;
+    margin: 30px auto;
+    max-width: 950px;
+
+  }
+
+
+   .imagenes-auto {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap; 
+  }
+
+  .img-auto {
+    max-width: 100%;
+    width: 400px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .img-auto:hover {
+    transform: scale(1.03);
+  }
+/*ACA COLOCA NO VISIBLE LA OPCIÓN*/
+  .button-masInfo.disabled {
+    background-color: gray;
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
 }

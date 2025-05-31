@@ -11,8 +11,8 @@
    <div style='margin-top: 100px;'> 
     <div class="section" style="height: 200px;"></div>
 <div class="citas-wrapper">   
-    <div class="citas-container">
-        <h3>Agenda tu Cita</h3>
+   <div class="form-container">
+        <h2>Agendar Cita</h2>
         <p>Reserva una cita para conocer tu próximo auto</p>
         <input type="text" placeholder="Nombre" />
         <input type="email" placeholder="Email" />
