@@ -55,13 +55,11 @@
     background-color: #757575;
 }
 
-/* Estilos para los iconos de Material */
 .material-icons {
     vertical-align: middle;
     margin-right: 4px;
 }
 
-/* Animaciones para los modales */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -80,7 +78,6 @@
     animation: slideIn 0.3s ease;
 }
 
-/* Estilos para el Modal de Edición */
 #editModal .modal-content {
     width: 90%;
     max-width: 500px;
@@ -130,7 +127,6 @@
 #editProductForm .file-label i {
     font-size: 18px;
 }
-/* Estilos para los inputs del modal */
 #editModal .input-group input {
     width: 100%;
     padding: 10px;
@@ -141,7 +137,7 @@
 }
 
 #editModal .input-group input:focus {
-    border-color: #2fd103; /* Cambiar al color del botón de guardar */
+    border-color: #2fd103; 
     outline: none;
 }
 
@@ -176,8 +172,7 @@
 #editModal .file-label i {
     font-size: 18px;
 }
-/* modal jnputs */
-/* Estilos para los inputs del modal */
+
 #editModal .input-group input {
     width: 100%;
     padding: 10px;
@@ -188,7 +183,7 @@
 }
 
 #editModal .input-group input:focus {
-    border-color: #2fd103; /* Cambiar al color del botón de guardar */
+    border-color: #2fd103; 
     outline: none;
 }
 
@@ -223,7 +218,6 @@
 #editModal .file-label i {
     font-size: 18px;
 }
-/* button save modal */
 #editModal .button-save-modal {
     position: relative;
     border-radius: 6px;

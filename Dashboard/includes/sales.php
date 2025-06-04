@@ -2,280 +2,265 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-//funcion Api Ventas @Isma
-function apiSalesList()
+// Obtener token
+function obtenerToken()
 {
-    $url = 'https://alexcg.de/autozone/api/sales.php';
-    //inicializar curl
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($curl);
+    $url = 'https://alexcg.de/autozone/api/login.php';
+    $credentials = ['username' => 'ghost', 'password' => '12345'];
 
-    if ($response === false) {
-        error_log('Error en la API de ventas: ' . curl_error($curl));
-        curl_close($curl);
-        return [];
-    }
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POSTFIELDS => json_encode($credentials),
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_SSL_VERIFYPEER => false,
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-    curl_close($curl);
     $data = json_decode($response, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('Error al decodificar JSON de la API de ventas: ' . json_last_error_msg());
-        return [];
-    }
-
-    if (empty($data)) {
-        error_log('La API de ventas devolvió un array vacío');
-    }
-
-    return $data;
+    return $data['token'] ?? null;
 }
-// Inicializar filtros
+
+// Obtener ventas
+function apiSalesList($token)
+{
+    if (!$token) return [];
+
+    $url = 'https://alexcg.de/autozone/api/sales.php';
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $token],
+        CURLOPT_SSL_VERIFYPEER => false,
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($response, true);
+    return $data['data'] ?? [];
+}
+
+$token = obtenerToken();
+$ventas = apiSalesList($token);
+
+// Filtros
 $filtros = [
-    'periodo' => isset($_POST['periodo']) ? $_POST['periodo'] : 'mes',
-    'año' => isset($_POST['año']) ? $_POST['año'] : date('Y'),
-    'mes' => isset($_POST['mes']) ? $_POST['mes'] : date('m'),
-    'semana' => isset($_POST['semana']) ? $_POST['semana'] : date('W'),
-    'modelo' => isset($_POST['modelo']) ? $_POST['modelo'] : '',
-    'precio_min' => isset($_POST['precio_min']) ? $_POST['precio_min'] : '',
-    'precio_max' => isset($_POST['precio_max']) ? $_POST['precio_max'] : '',
-    'tipo_carro' => isset($_POST['tipo_carro']) ? $_POST['tipo_carro'] : ''
+    'periodo' => $_POST['periodo'] ?? '',
+    'año' => $_POST['año'] ?? '',
+    'mes' => $_POST['mes'] ?? '',
+    'semana' => $_POST['semana'] ?? '',
+    'modelo' => $_POST['modelo'] ?? '',
+    'precio_min' => $_POST['precio_min'] ?? '',
+    'precio_max' => $_POST['precio_max'] ?? '',
+    'tipo_carro' => $_POST['tipo_carro'] ?? ''
 ];
 
-// Obtener datos de ventas a través de la API
-$ventas = apiSalesList();
-
-// Filtrar los datos según los criterios
+// Aplicar filtros si existen
 $ventas_filtradas = array_filter($ventas, function ($venta) use ($filtros) {
-    if (!is_array($venta)) {
-        return false;
+    if (!is_array($venta)) return false;
+    if (!isset($venta['cars_model'], $venta['total'], $venta['cars_type'])) return false;
+
+    // Como no hay fecha real, usamos fecha actual
+    $fecha_venta = time();
+
+    $cumple = true;
+
+    if ($filtros['periodo'] === 'mes' && $filtros['año'] && $filtros['mes']) {
+        $cumple &= date('Y', $fecha_venta) == $filtros['año'] && date('m', $fecha_venta) == str_pad($filtros['mes'], 2, '0', STR_PAD_LEFT);
+    } elseif ($filtros['periodo'] === 'semana' && $filtros['año'] && $filtros['semana']) {
+        $cumple &= date('Y', $fecha_venta) == $filtros['año'] && date('W', $fecha_venta) == str_pad($filtros['semana'], 2, '0', STR_PAD_LEFT);
     }
 
-    // Verificar que los índices necesarios existan
-    if (
-        !isset($venta['sale_date']) || !isset($venta['car_model']) ||
-        !isset($venta['total']) || !isset($venta['car_type'])
-    ) {
-        return false;
-    }
-
-    $fecha_venta = strtotime($venta['sale_date']);
-    if ($fecha_venta === false) {
-        return false;
-    }
-
-    $cumple_filtros = true;
-
-    // Filtrar por período
-    if ($filtros['periodo'] === 'mes') {
-        $cumple_filtros = $cumple_filtros &&
-            date('Y', $fecha_venta) == $filtros['año'] &&
-            date('m', $fecha_venta) == $filtros['mes'];
-    } elseif ($filtros['periodo'] === 'semana') {
-        $cumple_filtros = $cumple_filtros &&
-            date('Y', $fecha_venta) == $filtros['año'] &&
-            date('W', $fecha_venta) == $filtros['semana'];
-    }
-
-    // Filtrar por modelo
     if (!empty($filtros['modelo'])) {
-        $cumple_filtros = $cumple_filtros &&
-            stripos($venta['car_model'], $filtros['modelo']) !== false;
+        $cumple &= stripos($venta['cars_model'], $filtros['modelo']) !== false;
     }
-
-    // Filtrar por precio
     if (!empty($filtros['precio_min'])) {
-        $cumple_filtros = $cumple_filtros &&
-            floatval($venta['total']) >= floatval($filtros['precio_min']);
+        $cumple &= floatval($venta['total']) >= floatval($filtros['precio_min']);
     }
     if (!empty($filtros['precio_max'])) {
-        $cumple_filtros = $cumple_filtros &&
-            floatval($venta['total']) <= floatval($filtros['precio_max']);
+        $cumple &= floatval($venta['total']) <= floatval($filtros['precio_max']);
     }
-
-    // Filtrar por tipo de carro
     if (!empty($filtros['tipo_carro'])) {
-        $cumple_filtros = $cumple_filtros &&
-            $venta['car_type'] === $filtros['tipo_carro'];
+        $cumple &= $venta['cars_type'] === $filtros['tipo_carro'];
     }
 
-    return $cumple_filtros;
+    return $cumple;
 });
 
-// Procesar datos filtrados para las gráficas
+// Si no se aplicaron filtros, mostrar todo
+if (empty(array_filter($filtros))) {
+    $ventas_filtradas = $ventas;
+}
+
+// Preparar datos para gráficos
 $datos = [
     'clientes' => [],
-    'ventas' => [],
-    'modelos' => [],
-    'totales' => []
+    'totales_modelo' => [],
+    'tipos' => [],
+    'por_mes' => []
 ];
 
 foreach ($ventas_filtradas as $venta) {
-    $datos['clientes'][] = $venta['client_name'];
-    $datos['ventas'][] = 1; // Contador de ventas
-    $datos['modelos'][] = $venta['car_model'];
-    $datos['totales'][] = floatval($venta['total']);
+    $cliente = $venta['client_name'] ?? 'Desconocido';
+    $modelo = $venta['cars_model'];
+    $tipo = $venta['cars_type'];
+    $monto = floatval($venta['total']);
+    $fecha = date('Y-m-d'); // Fecha actual porque no viene en la API
+    $mes = date('Y-m', strtotime($fecha));
+
+    $datos['clientes'][$cliente] = ($datos['clientes'][$cliente] ?? 0) + 1;
+    $datos['totales_modelo'][$modelo] = ($datos['totales_modelo'][$modelo] ?? 0) + $monto;
+    $datos['tipos'][$tipo] = ($datos['tipos'][$tipo] ?? 0) + 1;
+    $datos['por_mes'][$mes] = ($datos['por_mes'][$mes] ?? 0) + $monto;
 }
 ?>
 
-<!-- Material UI Dependencies -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="assets/css/sales.css" rel="stylesheet">
-<h1>Panel de ventas</h1>
-<div class="sales-container">
-    <div class="filters-section">
+<!DOCTYPE html>
+<html lang="es">
 
-        <button id="openFiltersBtn" class="mui-btn">
-            <i class="material-icons">filter_list</i>
-            Filtrar Datos
-        </button>
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            padding-top: 20px;
+        }
 
-    <div class="charts-container">
-        <div class="chart-wrapper">
-            <canvas id="ventasChart"></canvas>
-        </div>
-        <div class="chart-wrapper">
-            <canvas id="ventasPorModeloChart"></canvas>
-        </div>
-    </div>
-</div>
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-<!-- Modal de Filtros -->
-<div id="filterModal" class="modal">
-    <div class="modal-content">
-        <h2>Filtros de Ventas</h2>
-        <form id="filterForm" method="POST">
-            <div class="form-group">
-                <label>Período</label>
-                <select name="periodo" class="mui-select">
-                    <option value="mes">Mes</option>
-                    <option value="semana">Semana</option>
-                    <option value="año">Año</option>
+        .chart-wrapper {
+            width: 48%;
+        }
+
+        @media (max-width: 768px) {
+            .chart-wrapper {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Panel de Ventas</h1>
+
+    <form method="POST" class="mb-4 p-3 border rounded bg-light">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="periodo" class="form-label">Periodo:</label>
+                <select class="form-select" id="periodo" name="periodo">
+                    <option value="" <?= $filtros['periodo'] === '' ? 'selected' : '' ?>>--</option>
+                    <option value="mes" <?= $filtros['periodo'] === 'mes' ? 'selected' : '' ?>>Mes</option>
+                    <option value="semana" <?= $filtros['periodo'] === 'semana' ? 'selected' : '' ?>>Semana</option>
                 </select>
             </div>
-
-            <div class="form-group">
-                <label>Año</label>
-                <input type="number" name="año" value="<?php echo date('Y'); ?>" class="mui-input">
+            <div class="col-md-4">
+                <label for="año" class="form-label">Año:</label>
+                <input type="number" class="form-control" id="año" name="año" value="<?= htmlspecialchars($filtros['año']); ?>">
             </div>
-
-            <div class="form-group">
-                <label>Rango de Precios</label>
-                <div class="price-range">
-                    <input type="number" name="precio_min" placeholder="Mínimo" class="mui-input">
-                    <input type="number" name="precio_max" placeholder="Máximo" class="mui-input">
-                </div>
+            <div class="col-md-4">
+                <label for="mes" class="form-label">Mes:</label>
+                <input type="number" class="form-control" id="mes" name="mes" min="1" max="12" value="<?= htmlspecialchars($filtros['mes']); ?>">
             </div>
-
-            <div class="form-group">
-                <label>Marca de Carro</label>
-                <input type="text" name="modelo" class="mui-input">
+            <div class="col-md-4">
+                <label for="semana" class="form-label">Semana:</label>
+                <input type="number" class="form-control" id="semana" name="semana" min="1" max="53" value="<?= htmlspecialchars($filtros['semana']); ?>">
             </div>
-
-            <div class="modal-actions">
-                <button type="submit" class="mui-btn mui-btn--primary">Aplicar Filtros</button>
-                <button type="button" class="mui-btn mui-btn--flat" onclick="closeModal()">Cancelar</button>
+            <div class="col-md-4">
+                <label for="modelo" class="form-label">Modelo:</label>
+                <input type="text" class="form-control" id="modelo" name="modelo" value="<?= htmlspecialchars($filtros['modelo']); ?>">
             </div>
-        </form>
+            <div class="col-md-4">
+                <label for="precio_min" class="form-label">Precio Min:</label>
+                <input type="number" class="form-control" id="precio_min" step="0.01" name="precio_min" value="<?= htmlspecialchars($filtros['precio_min']); ?>">
+            </div>
+            <div class="col-md-4">
+                <label for="precio_max" class="form-label">Precio Max:</label>
+                <input type="number" class="form-control" id="precio_max" step="0.01" name="precio_max" value="<?= htmlspecialchars($filtros['precio_max']); ?>">
+            </div>
+            <div class="col-md-4">
+                <label for="tipo_carro" class="form-label">Tipo:</label>
+                <input type="text" class="form-control" id="tipo_carro" name="tipo_carro" value="<?= htmlspecialchars($filtros['tipo_carro']); ?>">
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='sales.php'">Limpiar Filtros</button>
+        </div>
+    </form>
+
+    <div class="chart-container">
+        <div class="chart-wrapper"><canvas id="ventasCliente"></canvas></div>
+        <div class="chart-wrapper"><canvas id="ventasModelo"></canvas></div>
+        <div class="chart-wrapper"><canvas id="ventasTipo"></canvas></div>
+        <div class="chart-wrapper"><canvas id="ventasMes"></canvas></div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Configuración de gráficas
-    const ventasConfig = {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($datos['clientes']); ?>,
-            datasets: [{
-                label: 'Ventas por Cliente',
-                data: <?php echo json_encode($datos['ventas']); ?>,
-                backgroundColor: 'rgba(132, 0, 255, 0.7)',
-                borderColor: 'rgba(132, 0, 255, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Ventas por Cliente',
-                    font: {
-                        size: 16,
-                        weight: 'bold'
-                    }
-                },
-                legend: {
-                    position: 'bottom'
-                }
+    <h2 class="mt-4">Tabla de Ventas</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Modelo</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($ventas_filtradas as $venta): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($venta['client_name'] ?? 'Desconocido') ?></td>
+                        <td><?= htmlspecialchars($venta['cars_model']) ?></td>
+                        <td><?= htmlspecialchars($venta['cars_type']) ?></td>
+                        <td>$<?= number_format($venta['total'], 2) ?></td>
+                        <td><?= date('Y-m-d') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const chart = (id, type, labels, data, title) => new Chart(document.getElementById(id), {
+            type,
+            data: {
+                labels,
+                datasets: [{
+                    label: title,
+                    data,
+                    backgroundColor: ['#845EC2', '#00C9A7', '#FFC75F', '#FF6F91', '#0081CF', '#B0A8B9'],
+                }]
             },
-            animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart'
-            }
-        }
-    };
-
-    const modelosConfig = {
-        type: 'doughnut',
-        data: {
-            labels: <?php echo json_encode($datos['modelos']); ?>,
-            datasets: [{
-                data: <?php echo json_encode($datos['totales']); ?>,
-                backgroundColor: [
-                    'rgba(132, 0, 255, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Ventas por Modelo',
-                    font: {
-                        size: 16,
-                        weight: 'bold'
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: title
                     }
-                },
-                legend: {
-                    position: 'bottom'
                 }
             }
-        }
-    };
+        });
 
-    // Inicializar gráficas
-    const ventasChartCtx = document.getElementById('ventasChart').getContext('2d');
-    new Chart(ventasChartCtx, ventasConfig);
+        chart('ventasCliente', 'bar', Object.keys(<?= json_encode($datos['clientes']); ?>), Object.values(<?= json_encode($datos['clientes']); ?>), 'Ventas por Cliente');
+        chart('ventasModelo', 'pie', Object.keys(<?= json_encode($datos['totales_modelo']); ?>), Object.values(<?= json_encode($datos['totales_modelo']); ?>), 'Ventas por Modelo');
+        chart('ventasTipo', 'doughnut', Object.keys(<?= json_encode($datos['tipos']); ?>), Object.values(<?= json_encode($datos['tipos']); ?>), 'Ventas por Tipo de Carro');
+        chart('ventasMes', 'line', Object.keys(<?= json_encode($datos['por_mes']); ?>), Object.values(<?= json_encode($datos['por_mes']); ?>), 'Ventas por Mes');
+    </script>
+</body>
 
-    const modelosChartCtx = document.getElementById('ventasPorModeloChart').getContext('2d');
-    new Chart(modelosChartCtx, modelosConfig);
-
-    // Funciones del modal
-    function openModal() {
-        document.getElementById('filterModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('filterModal').style.display = 'none';
-    }
-
-    // Event listeners
-    document.getElementById('openFiltersBtn').addEventListener('click', openModal);
-
-    // Cerrar modal al hacer clic fuera
-    window.onclick = function(event) {
-        const modal = document.getElementById('filterModal');
-        if (event.target == modal) {
-            closeModal();
-        }
-    }
-</script>
+</html>
