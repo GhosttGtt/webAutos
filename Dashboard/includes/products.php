@@ -1,140 +1,144 @@
 <?php
-$url = 'https://alexcg.de/autozone/api/cars.php';
-$response = file_get_contents($url);
-$data = json_decode($response, true);
+include 'obtener_token.php';
 
-$cars = $data['data'] ?? [];
-$tipos = [];
-$anios = [];
+function apiCarsList() {
+    $token = obtenerToken();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://alexcg.de/autozone/api/cars.php');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $token
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    return $data['data'] ?? [];
+}
+
+function crearCar($carData) {
+    $token = obtenerToken();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://alexcg.de/autozone/api/cars_create.php');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $token
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($carData));
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($response, true);
+}
+
+function updateCar($carData) {
+    $token = obtenerToken();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://alexcg.de/autozone/api/cars_edit.php');
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $token
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($carData));
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($response, true);
+}
+
+function deleteCar($carId) {
+    $token = obtenerToken();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://alexcg.de/autozone/api/cars_delete.php?id=' . $carId);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $token
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($response, true);
+}
+
+$cars = apiCarsList();
+
+$tipos = array_unique(array_column($cars, 'type_name'));
+$anios = array_unique(array_column($cars, 'year'));
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard de Autos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-light">
+
 <div class="container my-5">
     <h1 class="text-center mb-4">Dashboard de Autos</h1>
+    <button type="button" class="material-button primary" id="openAddProductModal">Agregar Nuevo Auto</button>
 
+    <!-- Filtros -->
     <div class="row mb-4">
         <div class="col-md-4">
             <select id="filtroTipo" class="form-select">
                 <option value="">Todos los Tipos</option>
-                <?php foreach ($cars as $c) {
-                    $tipos[] = $c['type_name'];
-                }
-                foreach (array_unique($tipos) as $t) {
-                    echo "<option value='$t'>$t</option>";
-                } ?>
+                <?php foreach ($tipos as $t): ?>
+                    <option value="<?= htmlspecialchars($t) ?>"><?= htmlspecialchars($t) ?></option>
+                <?php endforeach; ?>
             </select>
-        </div>
+
+</div>
         <div class="col-md-4">
             <select id="filtroAnio" class="form-select">
                 <option value="">Todos los Años</option>
-                <?php foreach ($cars as $c) {
-                    $anios[] = $c['year'];
-                }
-                foreach (array_unique($anios) as $a) {
-                    echo "<option value='$a'>$a</option>";
-                } ?>
+                <?php foreach ($anios as $a): ?>
+                    <option value="<?= htmlspecialchars($a) ?>"><?= htmlspecialchars($a) ?></option>
+                <?php endforeach; ?>
             </select>
-        </div>
-    </div>
 
+</div>
+
+</div>
+
+    <!-- Cards de Autos -->
     <div class="row" id="autosContainer">
         <?php foreach ($cars as $car): ?>
-            <div class="col-md-4 mb-3 auto" data-tipo="<?= $car['type_name'] ?>" data-anio="<?= $car['year'] ?>">
-                <div class="card h-100">
-                    <img src="<?= $car['image'] ?>" class="card-img-top" alt="<?= $car['model'] ?>">
+            <div class="col-md-4 mb-3 auto" data-tipo="<?= htmlspecialchars($car['type_name']) ?>" data-anio="<?= htmlspecialchars($car['year']) ?>">
+                <div class="card h-100 product-card" style="cursor:pointer;">
+                    <img src="<?= htmlspecialchars($car['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($car['model']) ?>">
                     <div class="card-body">
-                        <h5 class="card-title"><?= "{$car['brand']} {$car['model']} ({$car['year']})" ?></h5>
-                        <p class="card-text"><?= $car['description'] ?></p>
+                        <h5 class="card-title"><?= htmlspecialchars("{$car['brand']} {$car['model']} ({$car['year']})") ?></h5>
+                        <script type="application/json"><?= json_encode($car) ?></script>
+                        <p class="card-text"><?= htmlspecialchars($car['description']) ?></p>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Motor:</strong> <?= $car['motor'] ?></li>
-                            <li class="list-group-item"><strong>Precio:</strong> $<?= $car['price'] ?></li>
-                            <li class="list-group-item"><strong>Tipo:</strong> <?= $car['type_name'] ?></li>
-                            <li class="list-group-item"><strong>Stock:</strong> <?= $car['stock'] ?> unidades</li>
+                            <li class="list-group-item"><strong>Motor:</strong> <?= htmlspecialchars($car['motor']) ?></li>
+                            <li class="list-group-item"><strong>Precio:</strong> $<?= htmlspecialchars($car['price']) ?></li>
+                            <li class="list-group-item"><strong>Tipo:</strong> <?= htmlspecialchars($car['type_name']) ?></li>
+                            <li class="list-group-item"><strong>Stock:</strong> <?= htmlspecialchars($car['stock']) ?> unidades</li>
                         </ul>
-                    </div>
-                </div>
-            </div>
+            
+</div>
+        
+</div>
+    
+</div>
         <?php endforeach; ?>
-    </div>
+
+</div>
 
     <!-- Gráficas -->
     <div class="row mt-5">
         <div class="col-md-6">
             <canvas id="barChart"></canvas>
-        </div>
+
+</div>
         <div class="col-md-6">
             <canvas id="pieChart"></canvas>
-        </div>
-    </div>
 
-    <!-- Modal de Actualización de Producto -->
-    <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateProductModalLabel">Actualizar Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="updateProductForm">
-                        <input type="hidden" id="update_product_id" name="id">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="update_name" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="update_name" name="name" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="update_price" class="form-label">Precio</label>
-                                <input type="number" class="form-control" id="update_price" name="price" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="update_brand" class="form-label">Marca</label>
-                                <input type="text" class="form-control" id="update_brand" name="brand" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="update_model" class="form-label">Modelo</label>
-                                <input type="text" class="form-control" id="update_model" name="model" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="update_year" class="form-label">Año</label>
-                                <input type="number" class="form-control" id="update_year" name="year" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="update_mileage" class="form-label">Kilometraje</label>
-                                <input type="number" class="form-control" id="update_mileage" name="mileage" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="update_description" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="update_description" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="update_image" class="form-label">Imagen</label>
-                            <input type="file" class="form-control" id="update_image" name="image" accept="image/*">
-                            <small class="text-muted">Deja vacío para mantener la imagen actual</small>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="saveProductUpdate">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+</div>
+
+
+
+</div>
+
+<!-- Scripts -->
 
 <script>
 document.querySelectorAll('#filtroTipo, #filtroAnio').forEach(select => {
@@ -165,7 +169,6 @@ new Chart(document.getElementById("barChart"), {
     }
 });
 
-// Gráfica de pastel
 new Chart(document.getElementById("pieChart"), {
     type: 'pie',
     data: {
@@ -178,98 +181,342 @@ new Chart(document.getElementById("pieChart"), {
     }
 });
 
-// Función para abrir el modal de actualización
-function openUpdateModal(product) {
-    document.getElementById('update_product_id').value = product.id;
-    document.getElementById('update_name').value = product.name;
-    document.getElementById('update_price').value = product.price;
-    document.getElementById('update_brand').value = product.brand;
-    document.getElementById('update_model').value = product.model;
-    document.getElementById('update_year').value = product.year;
-    document.getElementById('update_mileage').value = product.mileage;
-    document.getElementById('update_description').value = product.description;
     
-    const updateModal = new bootstrap.Modal(document.getElementById('updateProductModal'));
-    updateModal.show();
-}
+</script>
 
-// Manejar la actualización del producto
-document.getElementById('saveProductUpdate').addEventListener('click', function() {
-    const form = document.getElementById('updateProductForm');
-    const formData = new FormData(form);
-    
-    // Convertir la imagen a base64 si se seleccionó una nueva
-    const imageFile = formData.get('image');
-    if (imageFile && imageFile.size > 0) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            formData.set('image', e.target.result);
-            updateProduct(formData);
-        };
-        reader.readAsDataURL(imageFile);
-    } else {
-        formData.delete('image');
-        updateProduct(formData);
-    }
-});
+<!-- Modal Actualizar Producto -->
+<div id="updateProductModal" class="material-modal-content">
+    <div class="material-modal-header">
+        <h4>Actualizar Producto</h4>
+        <button type="button" class="material-modal-close-button">&times;</button>
+    </div>
+    <div class="material-modal-body">
+        <form id="updateProductForm">
+            <input type="hidden" id="update_product_id" name="id">
+            <div class="material-form-group">
+                <input type="text" id="update_brand" name="brand" required placeholder=" ">
+                <label for="update_brand">Marca</label>
+            </div>
+            <div class="material-form-group">
+                <input type="text" id="update_model" name="model" required placeholder=" ">
+                <label for="update_model">Modelo</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="update_year" name="year" required placeholder=" ">
+                <label for="update_year">Año</label>
+            </div>
 
-function updateProduct(formData) {
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    // Aquí irá la URL de la API para actualizar el producto
-    const apiUrl = 'URL_DE_LA_API_PARA_ACTUALIZAR_PRODUCTO';
-    
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + '<?php echo $_SESSION['token']; ?>'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            bootstrap.Modal.getInstance(document.getElementById('updateProductModal')).hide();
-            loadProducts();
-        } else {
-            alert('Error al actualizar el producto: ' + (result.message || 'Error desconocido'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al actualizar el producto');
-    });
-}
-
-function createProductCard(product) {
-    return `
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="${product.image}" class="card-img-top" alt="${product.name}" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">${product.name}</h5>
-                    <p class="card-text">
-                        <strong>Marca:</strong> ${product.brand}<br>
-                        <strong>Modelo:</strong> ${product.model}<br>
-                        <strong>Año:</strong> ${product.year}<br>
-                        <strong>Kilometraje:</strong> ${product.mileage} km<br>
-                        <strong>Precio:</strong> $${product.price}
-                    </p>
-                    <p class="card-text">${product.description}</p>
-                </div>
-                <div class="card-footer">
-                    <button class="btn btn-primary btn-sm" onclick="openUpdateModal(${JSON.stringify(product)})">
-                        <i class="material-icons">edit</i> Editar
-                    </button>
+            <div class="material-form-group">
+                <input type="text" id="update_motor" name="motor" required placeholder=" ">
+                <label for="update_motor">Motor</label>
+            </div>
+            <div class="material-form-group">
+                <input type="text" id="update_fuel" name="fuel" required placeholder=" ">
+                <label for="update_fuel">Combustible</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="update_price" name="price" required placeholder=" ">
+                <label for="update_price">Precio</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="update_type_id" name="type_id" required placeholder=" ">
+                <label for="update_type_id">ID de Tipo</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="update_stock" name="stock" required placeholder=" ">
+                <label for="update_stock">Stock</label>
+            </div>
+            <div class="material-form-group">
+                <textarea id="update_description" name="description" rows="3" required placeholder=" "></textarea>
+                <label for="update_description">Descripción</label>
+            </div>
+            <div class="material-file-input-wrapper">
+                <input type="file" id="update_image" name="image" accept="image/*">
+                <div class="material-file-input-display">
+                    <span class="material-file-input-button">Imagen</span>
+                    <span class="material-file-input-text">Deja vacío para mantener la imagen actual</span>
                 </div>
             </div>
-        </div>
-    `;
-}
+        </form>
+    </div>
+    <div class="material-modal-footer">
+        <button type="button" class="material-button flat red" id="deleteProduct">Eliminar</button>
+            <button type="button" class="material-button flat" onclick="updateProductModal.close()">Cancelar</button>
+        <button type="button" class="material-button" id="saveProductUpdate">Guardar Cambios</button>
+    </div>
+</div>
+
+<!-- Modal Agregar Producto -->
+<div id="addProductModal" class="material-modal-content">
+    <div class="material-modal-header">
+        <h4>Agregar Nuevo Producto</h4>
+        <button type="button" class="material-modal-close-button">&times;</button>
+    </div>
+    <div class="material-modal-body">
+        <form id="addProductForm">
+            <div class="material-form-group">
+                <input type="text" id="add_brand" name="brand" required placeholder=" ">
+                <label for="add_brand">Marca</label>
+            </div>
+            <div class="material-form-group">
+                <input type="text" id="add_model" name="model" required placeholder=" ">
+                <label for="add_model">Modelo</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="add_year" name="year" required placeholder=" ">
+                <label for="add_year">Año</label>
+            </div>
+
+            <div class="material-form-group">
+                <input type="number" id="add_price" name="price" required placeholder=" ">
+                <label for="add_price">Precio</label>
+            </div>
+            <div class="material-form-group">
+                <textarea id="add_description" name="description" rows="3" required placeholder=" "></textarea>
+                <label for="add_description">Descripción</label>
+            </div>
+            <div class="material-file-input-wrapper">
+                <input type="file" id="add_image" name="image" accept="image/*" required>
+                <div class="material-file-input-display">
+                    <span class="material-file-input-button">Imagen</span>
+                    <span class="material-file-input-text">Seleccionar imagen</span>
+                </div>
+            </div>
+            <div class="material-form-group">
+                <input type="text" id="add_motor" name="motor" required placeholder=" ">
+                <label for="add_motor">Motor</label>
+            </div>
+            <div class="material-form-group">
+                <input type="text" id="add_type_name" name="type_name" required placeholder=" ">
+                <label for="add_type_name">Tipo</label>
+            </div>
+            <div class="material-form-group">
+                <input type="number" id="add_stock" name="stock" required placeholder=" ">
+                <label for="add_stock">Stock</label>
+            </div>
+        </form>
+    </div>
+    <div class="material-modal-footer">
+        <button type="button" class="material-button flat" onclick="addProductModal.close()">Cancelar</button>
+            <button type="button" class="material-button" id="saveNewProduct">Guardar Producto</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = "<?php echo obtenerToken(); ?>";
+        const updateProductModal = new MaterialModal('updateProductModal');
+
+        window.openUpdateModal = function(product) {
+            document.getElementById('update_product_id').value = product.id;
+            document.getElementById('update_brand').value = product.brand;
+            document.getElementById('update_model').value = product.model;
+            document.getElementById('update_year').value = product.year;
+
+            document.getElementById('update_motor').value = product.motor;
+            document.getElementById('update_fuel').value = product.fuel;
+            document.getElementById('update_price').value = product.price;
+            document.getElementById('update_type_id').value = product.type_id;
+            document.getElementById('update_stock').value = product.stock;
+            document.getElementById('update_description').value = product.description;
+            document.getElementById('update_image').value = ''; // Clear file input
+            updateMaterialTextFields(); // Apply Material Design input styles
+            updateProductModal.open();
+        };
+
+        document.getElementById('saveProductUpdate').addEventListener('click', function() {
+            const form = document.getElementById('updateProductForm');
+            const formData = new FormData(form);
+            const imageFile = formData.get('image');
+            updateProductModal.close();
+
+            if (imageFile && imageFile.size > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updateProduct(formData, e.target.result);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                updateProduct(formData, null);
+            }
+        });
+
+        async function updateProduct(formData, base64Image) {
+            const id = formData.get('id');
+            const carData = {
+                id,
+                brand: formData.get('brand'),
+                model: formData.get('model'),
+                year: parseInt(formData.get('year')),
+                motor: formData.get('motor'),
+                fuel: formData.get('fuel'),
+                price: parseFloat(formData.get('price')),
+                description: formData.get('description'),
+                type_id: parseInt(formData.get('type_id')),
+                stock: parseInt(formData.get('stock'))
+            };
+
+            try {
+                const response = await fetch('https://alexcg.de/autozone/api/cars_edit.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(carData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    if (base64Image) {
+                        await updateImage(id, base64Image);
+                    } else {
+                        alert('Producto actualizado con éxito');
+                        updateProductModal.close();
+                        location.reload();
+                    }
+                } else {
+                    console.error(result);
+                    alert('Error al actualizar el producto: ' + (result.message || 'Error desconocido'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error al actualizar el producto');
+            }
+        }
+
+        async function updateImage(id, base64Image) {
+            const imageData = new FormData();
+            imageData.append('id', id);
+            imageData.append('image', base64Image);
+
+            try {
+                const response = await fetch('https://alexcg.de/autozone/api/cars_edit_photo.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: imageData
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Imagen actualizada con éxito');
+                    updateProductModal.close();
+                    location.reload();
+                } else {
+                    console.error(result);
+                    alert('Error al actualizar la imagen: ' + (result.message || 'Error desconocido'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error al actualizar la imagen');
+            }
+        }
+
+        document.getElementById('deleteProduct').addEventListener('click', async function() {
+            const id = document.getElementById('update_product_id').value;
+
+            if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+
+            try {
+                const response = await fetch('https://alexcg.de/autozone/api/cars_delete.php?id=' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Producto eliminado con éxito');
+                    updateProductModal.close();
+                    location.reload();
+                } else {
+                    console.error(result);
+                    alert('Error al eliminar el producto: ' + (result.message || 'Error desconocido'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error al eliminar el producto');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const productCard = event.target.closest('.product-card');
+            if (productCard) {
+                const productData = JSON.parse(productCard.closest('.auto').querySelector('script[type="application/json"]').textContent);
+                openUpdateModal(productData);
+            }
+        });
+
+
+    });
+
+    
 </script>
-</body>
-</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addProductModal = new MaterialModal('addProductModal');
+
+        document.getElementById('openAddProductModal').addEventListener('click', function() {
+            document.getElementById('addProductForm').reset();
+            updateMaterialTextFields();
+            addProductModal.open();
+        });
+
+        document.getElementById('saveNewProduct').addEventListener('click', async function() {
+            const form = document.getElementById('addProductForm');
+            const formData = new FormData(form);
+            const imageFile = formData.get('image');
+
+            let base64Image = null;
+            if (imageFile && imageFile.size > 0) {
+                base64Image = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(imageFile);
+                });
+            } else {
+                alert('Por favor, selecciona una imagen para el producto.');
+                return;
+            }
+
+            const carData = {
+                brand: formData.get('brand'),
+                model: formData.get('model'),
+                year: parseInt(formData.get('year')),
+
+                price: parseFloat(formData.get('price')),
+                description: formData.get('description'),
+                image: base64Image,
+                type_id: parseInt(formData.get('type_id')),
+                motor: formData.get('motor'),
+                stock: parseInt(formData.get('stock'))
+            };
+
+            try {
+                const response = await fetch('https://alexcg.de/autozone/api/cars.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token 
+                    },
+                    body: JSON.stringify(carData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Producto agregado con éxito');
+                    addProductModal.close();
+                    location.reload();
+                } else {
+                    console.error(result);
+                    alert('Error al agregar el producto: ' + (result.message || 'Error desconocido'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error al agregar el producto');
+            }
+        });
+    });
+
+    
+</script>

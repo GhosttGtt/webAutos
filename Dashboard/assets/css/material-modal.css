@@ -1,0 +1,243 @@
+/* Basic Modal Styles */
+.material-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.material-modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.material-modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+    width: 90%; 
+    max-width: 800px;
+    box-sizing: border-box;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.material-modal-overlay.show .material-modal-content {
+    transform: translateY(0);
+}
+
+.material-modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.material-modal-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: rgba(0,0,0,.87);
+}
+
+.material-modal-close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: rgba(0,0,0,.54);
+    padding: 0;
+}
+
+.material-modal-body {
+    padding: 24px 15px; 
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: calc(90vh - 120px); /* Adjust based on header/footer height */
+}
+
+.material-modal-footer {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 2px; 
+    padding: 10px 10px; 
+    border-top: 1px solid #eee;
+}
+
+.material-modal-footer button {
+    padding: 8px 5px; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px; 
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+
+}
+
+.material-modal-footer button.btn-cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.material-modal-footer button.btn-cancel:hover {
+    background-color: #bbb;
+}
+
+.material-modal-footer button.btn-delete {
+    background-color: #f44336;
+    color: white; 
+}
+
+.material-modal-footer button.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
+.material-modal-footer button.btn-save {
+    background-color: #2196f3;
+    color: white;
+}
+
+.material-modal-footer button.btn-save:hover {
+    background-color: #1976d2;
+}
+
+.material-form-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.material-form-group input[type="text"],
+.material-form-group input[type="number"],
+.material-form-group textarea {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    background-color: transparent;
+}
+
+.material-form-group label {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    color: rgba(0,0,0,.54);
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+.material-form-group input:focus ~ label,
+.material-form-group input:not(:placeholder-shown) ~ label,
+.material-form-group textarea:focus ~ label,
+.material-form-group textarea:not(:placeholder-shown) ~ label {
+    top: -12px;
+    font-size: 12px;
+    color: #2196F3; 
+}
+
+.material-form-group input:focus,
+.material-form-group textarea:focus {
+    border-bottom: 2px solid #2196F3;
+}
+
+.material-file-input-wrapper {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.material-file-input-wrapper input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.material-file-input-display {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+}
+
+.material-file-input-button {
+    background-color: #2196F3;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.material-file-input-text {
+    flex-grow: 1;
+    color: rgba(0,0,0,.54);
+}
+
+/* Buttons */
+.material-button {
+    background-color: #2196F3;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px; 
+    text-transform: uppercase;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.material-button:hover {
+    background-color: #1976D2;
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.3);
+}
+
+.material-button.flat {
+    background: none;
+    color: #2196F3;
+    box-shadow: none;
+}
+
+.material-button.flat:hover {
+    background-color: rgba(33,150,243,.1);
+    box-shadow: none;
+}
+
+.material-button.red {
+    background-color: #F44336;
+    color: #fff ;
+}
+
+.material-button.red:hover {
+    background-color: #D32F2F;
+}
+
+.material-button.green {
+    background-color: #4CAF50;
+}
+
+.material-button.green:hover {
+    background-color: #388E3C;
+}

@@ -17,9 +17,16 @@ function obtenerToken()
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('cURL error: ' . curl_error($ch));
+    }
     curl_close($ch);
 
     $data = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error: ' . json_last_error_msg());
+        error_log('API response: ' . $response);
+    }
     return $data['token'] ?? null;
 }
 
@@ -39,9 +46,15 @@ function apiClientsList($token)
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('cURL error in apiClientsList: ' . curl_error($ch));
+    }
     curl_close($ch);
     $data = json_decode($response, true);
-
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error in apiClientsList: ' . json_last_error_msg());
+        error_log('API response in apiClientsList: ' . $response);
+    }
     return $data['data'] ?? [];
 }
 
@@ -62,8 +75,15 @@ function crearCliente($data, $token)
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('cURL error in crearCliente: ' . curl_error($ch));
+    }
     curl_close($ch);
     $result = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error in crearCliente: ' . json_last_error_msg());
+        error_log('API response in crearCliente: ' . $response);
+    }
     return $result['success'] ?? false;
 }
 
@@ -72,7 +92,7 @@ function actualizarCliente($data, $token)
 {
     if (!$token) return false;
 
-    $url = 'https://alexcg.de/autozone/api/clients_update.php';
+    $url = 'https://alexcg.de/autozone/api/client_edit.php';
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
@@ -84,27 +104,39 @@ function actualizarCliente($data, $token)
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('cURL error in crearCliente: ' . curl_error($ch));
+    }
     curl_close($ch);
     $result = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error in crearCliente: ' . json_last_error_msg());
+        error_log('API response in crearCliente: ' . $response);
+    }
     return $result['success'] ?? false;
 }
 
 // Variables para mensajes
-$mensaje = '';
-$tipo_mensaje = '';
+$mensaje = $_GET['mensaje'] ?? '';
+$tipo_mensaje = $_GET['tipo_mensaje'] ?? '';
 
 // Procesar formulario (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['create_cliente'])) {
         $clienteData = [
             'name' => $_POST['nombre'],
+            'lastname' => $_POST['apellido'],
             'email' => $_POST['email'],
             'phone' => $_POST['telefono']
         ];
 
+        if (!empty($_POST['password'])) {
+            $clienteData['password'] = $_POST['password'];
+        }
+
         if (crearCliente($clienteData, $token)) {
-            $mensaje = 'Cliente creado exitosamente';
-            $tipo_mensaje = 'success';
+            header('Location: clients.php?mensaje=Cliente creado exitosamente&tipo_mensaje=success');
+            exit();
         } else {
             $mensaje = 'Error al crear el cliente';
             $tipo_mensaje = 'error';
@@ -113,13 +145,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $clienteData = [
             'id' => $_POST['client_id'],
             'name' => $_POST['nombre'],
+            'lastname' => $_POST['apellido'],
             'email' => $_POST['email'],
             'phone' => $_POST['telefono']
         ];
 
+        if (!empty($_POST['password'])) {
+            $clienteData['password'] = $_POST['password'];
+        }
+
         if (actualizarCliente($clienteData, $token)) {
-            $mensaje = 'Cliente actualizado exitosamente';
-            $tipo_mensaje = 'success';
+            header('Location: clients.php?mensaje=Cliente actualizado exitosamente&tipo_mensaje=success');
+            exit();
         } else {
             $mensaje = 'Error al actualizar el cliente';
             $tipo_mensaje = 'error';
@@ -164,6 +201,11 @@ $clientes = apiClientsList($token);
                 </div>
 
                 <div class="form-field">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" class="text-field" required>
+                </div>
+
+                <div class="form-field">
                     <label for="email">Correo Electrónico</label>
                     <input type="email" id="email" name="email" class="text-field" required>
                 </div>
@@ -173,9 +215,15 @@ $clientes = apiClientsList($token);
                     <input type="tel" id="telefono" name="telefono" class="text-field" required>
                 </div>
 
+                <div class="form-field">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" class="text-field" placeholder="Dejar en blanco para no cambiar">
+                </div>
+
                 <button type="submit" name="create_cliente" id="submitBtn" class="button primary">
                     Agregar Cliente
                 </button>
+                <button type="button" onclick="limpiarFormulario()" class="button secondary" style="margin-left: 10px;">Cancelar</button>
             </form>
 
             <!-- Tabla de Clientes -->
@@ -186,8 +234,10 @@ $clientes = apiClientsList($token);
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Apellido</th>
                                 <th>Email</th>
                                 <th>Teléfono</th>
+                                <th>Contraseña</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -195,12 +245,16 @@ $clientes = apiClientsList($token);
                             <?php foreach ($clientes as $cliente): ?>
                                 <tr data-id="<?= htmlspecialchars($cliente['id'] ?? '') ?>"
                                     data-nombre="<?= htmlspecialchars($cliente['name'] ?? '') ?>"
+                                    data-apellido="<?= htmlspecialchars($cliente['lastname'] ?? '') ?>"
                                     data-email="<?= htmlspecialchars($cliente['email'] ?? '') ?>"
-                                    data-telefono="<?= htmlspecialchars($cliente['phone'] ?? '') ?>">
+                                    data-telefono="<?= htmlspecialchars($cliente['phone'] ?? '') ?>"
+                                    data-password="<?= htmlspecialchars($cliente['password'] ?? '') ?>">
                                     <td><?= htmlspecialchars($cliente['id'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($cliente['name'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($cliente['lastname'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($cliente['email'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($cliente['phone'] ?? '') ?></td>
+                                    <td>********</td>
                                     <td class="actions">
                                         <button onclick="editCliente(this.closest('tr'))" class="button edit">
                                             <span class="material-icons">edit</span>
@@ -220,44 +274,16 @@ $clientes = apiClientsList($token);
         </div>
     </div>
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Citas de Clientes</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha</th>
-                                        <th>Hora</th>
-                                        <th>Servicio</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="citasTableBody">
-                                    <!-- Las citas se cargarán aquí dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         function editCliente(row) {
             document.getElementById("client_id").value = row.dataset.id;
             document.getElementById("nombre").value = row.dataset.nombre;
+            document.getElementById("apellido").value = row.dataset.apellido;
             document.getElementById("email").value = row.dataset.email;
             document.getElementById("telefono").value = row.dataset.telefono;
+            document.getElementById("password").value = ''; // Password should not be pre-filled for security reasons
             document.getElementById("submitBtn").name = "update_cliente";
             document.getElementById("submitBtn").textContent = "Actualizar Cliente";
             document.getElementById("clientForm").scrollIntoView({
@@ -269,23 +295,21 @@ $clientes = apiClientsList($token);
         function limpiarFormulario() {
             document.getElementById("client_id").value = "";
             document.getElementById("nombre").value = "";
+            document.getElementById("apellido").value = "";
             document.getElementById("email").value = "";
             document.getElementById("telefono").value = "";
+            document.getElementById("password").value = "";
             document.getElementById("submitBtn").name = "create_cliente";
             document.getElementById("submitBtn").textContent = "Agregar Cliente";
         }
 
-        // Agregar botón de cancelar edición
-        document.getElementById("clientForm").insertAdjacentHTML('beforeend', 
-            '<button type="button" onclick="limpiarFormulario()" class="button secondary" style="margin-left: 10px;">Cancelar</button>'
-        );
+
 
         function toggleCliente(row) {
             const cells = row.querySelectorAll('td:not(:last-child)');
             const toggleButton = row.querySelector('.toggle .material-icons');
             
             if (row.classList.contains('disabled')) {
-                // Reactivar cliente
                 cells.forEach(cell => {
                     cell.style.textDecoration = 'none';
                     cell.style.color = 'inherit';
@@ -293,7 +317,6 @@ $clientes = apiClientsList($token);
                 toggleButton.textContent = 'toggle_off';
                 row.classList.remove('disabled');
             } else {
-                // Desactivar cliente
                 cells.forEach(cell => {
                     cell.style.textDecoration = 'line-through';
                     cell.style.color = '#999';
@@ -303,97 +326,7 @@ $clientes = apiClientsList($token);
             }
         }
 
-        // Función para cargar las citas
-        function loadCitas() {
-            fetch('https://alexcg.de/autozone/api/citas.php', {
-                headers: {
-                    'Authorization': 'Bearer ' + '<?php echo $_SESSION['token']; ?>'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.getElementById('citasTableBody');
-                tableBody.innerHTML = '';
-                
-                data.forEach(cita => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${cita.id}</td>
-                        <td>${cita.client_name}</td>
-                        <td>${cita.date}</td>
-                        <td>${cita.time}</td>
-                        <td>${cita.service}</td>
-                        <td>
-                            <span class="badge ${getStatusBadgeClass(cita.status)}">
-                                ${cita.status}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="updateCitaStatus(${cita.id}, 'confirmada')">
-                                <i class="material-icons">check</i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="updateCitaStatus(${cita.id}, 'cancelada')">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al cargar las citas');
-            });
-        }
 
-        // Función para obtener la clase del badge según el estado
-        function getStatusBadgeClass(status) {
-            switch(status.toLowerCase()) {
-                case 'pendiente':
-                    return 'bg-warning';
-                case 'confirmada':
-                    return 'bg-success';
-                case 'cancelada':
-                    return 'bg-danger';
-                default:
-                    return 'bg-secondary';
-            }
-        }
-
-        // Función para actualizar el estado de una cita
-        function updateCitaStatus(citaId, newStatus) {
-            // Aquí irá la URL de la API para actualizar el estado de la cita
-            const apiUrl = 'URL_DE_LA_API_PARA_ACTUALIZAR_CITA';
-            
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + '<?php echo $_SESSION['token']; ?>'
-                },
-                body: JSON.stringify({
-                    id: citaId,
-                    status: newStatus
-                })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    loadCitas(); // Recargar la lista de citas
-                } else {
-                    alert('Error al actualizar el estado de la cita: ' + (result.message || 'Error desconocido'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al actualizar el estado de la cita');
-            });
-        }
-
-        // Cargar las citas cuando se carga la página
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCitas();
-        });
     </script>
 </body>
 

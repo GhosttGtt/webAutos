@@ -69,11 +69,17 @@ if (isset($_GET['logout'])) {
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/index.css" />
+    <link rel="stylesheet" href="assets/css/material-modal.css" />
 </head>
 
 <body>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/material-modal.js"></script>
 
     <div class="dashboard-container">
         <button id="menu-toggle" class="menu-toggle">
@@ -243,7 +249,7 @@ if (isset($_GET['logout'])) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         function updateSystemTime() {
             const timeElement = document.getElementById('system-time').querySelector('span');
@@ -274,30 +280,39 @@ if (isset($_GET['logout'])) {
             });
         });
 
-        // Mostrar modal al hacer clic en el avatar
         document.getElementById('userAvatar').addEventListener('click', function() {
             var profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
             profileModal.show();
         });
 
-        // Manejar la actualización de la foto
+        // Manejo del formulario de actualización de foto
         document.getElementById('photoUpdateForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
-            
-            fetch(window.location.href, {
+            var formData = new FormData(this);
+            fetch('homePage.php', {
                 method: 'POST',
                 body: formData
-            })
-            .then(response => response.text())
-            .then(() => {
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al actualizar la foto');
-            });
+            }).then(response => response.text())
+              .then(data => {
+                  // Recargar la página para ver los cambios
+                  location.reload();
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
         });
+
+        // Previsualización de la imagen
+        document.getElementById('new_photo').addEventListener('change', function(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('userAvatar');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+
     </script>
 </body>
 
