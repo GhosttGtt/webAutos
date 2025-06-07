@@ -739,11 +739,52 @@ body {
 
   .img-auto:hover {
     transform: scale(1.03);
+
+
   }
-/*ACA COLOCA NO VISIBLE LA OPCIÓN*/
-  .button-masInfo.disabled {
-    background-color: gray;
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
+  @media screen and (max-width: 768px) {
+  /* Ajuste de imágenes */
+  img[alt="Carro Rojo"],
+  img[alt="Modelos"] {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Contenedor principal */
+  .container {
+    padding: 0 10px !important;
+  }
+
+  /* Estructura tipo columna en móvil */
+  .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .col {
+    width: 100% !important;
+    margin: 10px 0 !important;
+  }
+
+  /* Alineación de texto */
+  .right-align,
+  .center {
+    text-align: center !important;
+  }
+
+  /* Formulario */
+  form {
+    width: 100% !important;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="time"],
+  textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  }

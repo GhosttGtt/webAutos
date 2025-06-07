@@ -53,8 +53,7 @@ exit();
     }
             } else {
                 $mensaje = isset($response['message']) ? $response['message'] : "Error de autenticación.";
-                echo "<script>alert('$mensaje');</script>";
-                echo "<pre>" . print_r($response, true) . "</pre>";
+                echo "<script>alert('$mensaje'); window.location.href = 'iniciar_sesion.php';</script>";
             }
         }
     }

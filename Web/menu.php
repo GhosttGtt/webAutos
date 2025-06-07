@@ -57,23 +57,32 @@ foreach ($menuItems as $name => $link):
         </a>
     </li>
 <?php else: ?>
-    <li>
-        <a class="dropdown-trigger" href="iniciar_sesion.php" data-target="userDropdown">
-            <i class="material-icons">account_circle</i>
-        </a>
-    </li>
-    <ul id="userDropdown" class="dropdown-content">
-        <li class="logmenu">
-            <a href="#loginModal" class="modal-trigger">
-                <i class="material-icons">login</i> Iniciar Sesión
+    <?php if ($currentPage === 'index.php'): ?>
+
+        <li>
+            <a href="iniciar_sesion.php" class="modal-trigger" title="Iniciar Sesión">
+                <i class="material-icons">account_circle</i>
             </a>
         </li>
-        <li class="logmenu">
-            <a href="#registerModal" class="modal-trigger">
-                <i class="material-icons">person_add</i> Registrarse
+        <!-- Ícono normal para registrarse -->
+        <li>
+            <a href="crear_cuenta.php" class="modal-trigger" title="Registrarse">
+                <i class="material-icons">person_add</i>
             </a>
         </li>
-    </ul>
+    <?php else: ?>
+        <!-- Íconos en páginas externas -->
+        <li>
+            <a href="iniciar_sesion.php" title="Iniciar Sesión">
+                <i class="material-icons">account_circle</i>
+            </a>
+        </li>
+        <li>
+            <a href="crear_cuenta.php" title="Registrarse">
+                <i class="material-icons">person_add</i>
+            </a>
+        </li>
+    <?php endif; ?>
 <?php endif; ?>
 
 <!-- MODAL LOGIN -->

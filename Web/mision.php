@@ -75,7 +75,7 @@ nuestros clientes en cada paso del camino y consolidándonos como un referente d
     </div>
 
            
-    <!-- PIE DE PÁGINA  -->
+            <!-- PIE DE PÁGINA  -->
                         </div>
                       </div>                     
                       <div style='margin-top: 200px;'> 
@@ -88,8 +88,7 @@ nuestros clientes en cada paso del camino y consolidándonos como un referente d
                           </a>
                         </div>
 
-                        <div class="col l4 offset-l2 s12">
-                                                      
+                                                         
     <!-- CONTACTO -->
     <div style="flex: 2 1 400px; display: flex; flex-direction: column; gap: 12px; font-size: 15px;">
 
