@@ -84,7 +84,7 @@
     <div class="item" id="Contacto">
       <div class="form-section">
         <?php include 'contacto.php'; ?>
-            <div class="section" style="height: 150px;"></div>
+            <div class="section" style="height: 100px;"></div>
 
       </div>
     </div>

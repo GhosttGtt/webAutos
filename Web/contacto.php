@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
+    
     #myModal {
       display: none;
       position: fixed;
@@ -37,7 +38,7 @@
     .close-btn {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #007bff;
+      background-color: #5d00c1;;
       border: none;
       border-radius: 4px;
       color: white;
@@ -58,12 +59,12 @@
   <div class="form-container">
     <h2>Contáctanos</h2>
     <p>Estamos aquí para responder tus preguntas</p>
-    <form id="contactForm" novalidate>
-      <input type="text" name="name" placeholder="Nombre completo" required />
-      <input type="tel" name="phone" placeholder="Teléfono" required />
-      <input type="email" name="email" placeholder="Correo electrónico" required />
-      <input type="text" name="subject" placeholder="Asunto" required />
-      <textarea name="message" placeholder="Mensaje" rows="5" required></textarea>
+    <form id="contactForm" autocomplete="off" novalidate>
+      <input type="text" name="name" placeholder="Nombre completo" required autocomplete="name" />
+      <input type="tel" name="phone" placeholder="Teléfono" required autocomplete="tel" />
+      <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email" />
+      <input type="text" name="subject" placeholder="Asunto" required autocomplete="off" />
+      <textarea name="message" placeholder="Mensaje" rows="5" required autocomplete="off"></textarea>
       <button type="submit" id="sendBtn">Enviar mensaje</button>
     </form>
   </div>
@@ -72,21 +73,19 @@
 <div id="myModal">
   <div class="modal-content">
     <p id="modalText"></p>
-    <button id="modalCloseBtn" onClick="window.location.reload()" class="close-btn">Cerrar</button>
+    <button id="modalCloseBtn" class="close-btn">Cerrar</button>
   </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById('contactForm');
-    /*const modal = document.getElementById('myModal');
+    const modal = document.getElementById('myModal');
     const modalText = document.getElementById('modalText');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
-    const sendBtn = document.getElementById('sendBtn');*/
+    const sendBtn = document.getElementById('sendBtn');
 
     let isSubmitting = false;
-
-    form.onsubmit = null;
 
     form.addEventListener('submit', async function handleSubmit(e) {
       e.preventDefault();
@@ -123,7 +122,7 @@
           body: JSON.stringify(data)
         });
 
-       if (response.ok) {
+        if (response.ok) {
           modalText.textContent = '¡Mensaje enviado con éxito!';
           modalText.className = 'success';
           form.reset();
@@ -132,9 +131,9 @@
           modalText.className = 'error';
         }
 
-       modal.classList.add('show');
+        modal.classList.add('show');
 
-       } catch (error) {
+      } catch (error) {
         console.error("❌ Error de red:", error);
         modalText.textContent = 'Error de red o servidor.';
         modalText.className = 'error';
@@ -142,7 +141,7 @@
       }
 
       isSubmitting = false;
-     /* sendBtn.disabled = false;*/
+      sendBtn.disabled = false;
     });
 
     modalCloseBtn.addEventListener('click', () => {

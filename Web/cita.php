@@ -61,7 +61,7 @@
             <form id="formCita">
                 <input type="text" name="name" placeholder="Nombre" required />
                 <input type="email" name="email" placeholder="Email" required />
-                <input type="datetime-local" name="date" placeholder="Fecha y hora" required />
+                <input type="datetime-local" name="datetime" placeholder="Fecha y hora" required />
                 <input type="number" name="people" placeholder="Cantidad de personas" required />
                 <button type="submit">Agendar tu cita</button>
             </form>
@@ -85,16 +85,16 @@
   const formCita = document.getElementById('formCita');
 
   formCita.addEventListener('submit', async function(event) {
-    event.preventDefault(); // evitar recargar la página
+    event.preventDefault(); 
     
     const formData = new FormData(formCita);
     const data = {
       name: formData.get('name'),
       email: formData.get('email'),
-      date: formData.get('date'),
+      datetime: formData.get('datetime'),
       people: formData.get('people')
     };
-
+console.log(data); // Para depuración, puedes eliminarlo después
     try {
       const response = await fetch('https://alexcg.de/autozone/api/citas_create.php', {
         method: 'POST',

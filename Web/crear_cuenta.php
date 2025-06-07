@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+$mensaje = "";
+$tipo_mensaje = ""; // 'success' o 'error'
+
 if (isset($_SESSION['usuario'])) {
     header('Location: index.php');
     exit();
@@ -14,9 +17,11 @@ if (isset($_POST["btnregistrar"])) {
     $password = $_POST["txtpassword"];
 
     if (empty($name) || empty($lastname) || empty($email) || empty($phone) || empty($password)) {
-        echo "<script>alert('Todos los campos son obligatorios');</script>";
+        $mensaje = 'Todos los campos son obligatorios';
+        $tipo_mensaje = 'error';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Correo no válido');</script>";
+        $mensaje = 'Correo no válido';
+        $tipo_mensaje = 'error';
     } else {
         $data = [
             "name" => $name,
@@ -27,7 +32,6 @@ if (isset($_POST["btnregistrar"])) {
         ];
 
         $jsonData = json_encode($data);
-
         $ch = curl_init("https://alexcg.de/autozone/api/clients_create.php");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -42,24 +46,29 @@ if (isset($_POST["btnregistrar"])) {
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if (curl_errno($ch)) {
-            echo "<script>alert('Error de conexión: " . curl_error($ch) . "');</script>";
+            $mensaje = 'Error de conexión: ' . curl_error($ch);
+            $tipo_mensaje = 'error';
         } else {
             $responseData = json_decode($response, true);
-
             if ($http_code == 200 && isset($responseData['success']) && $responseData['success'] === true) {
-                // LOGIN AUTOMÁTICO
                 $_SESSION['usuario'] = $email;
                 $_SESSION['nombre'] = $name;
                 $_SESSION['apellido'] = $lastname;
 
-                echo "<script>alert('Cuenta creada con éxito'); window.location='index.php';</script>";
-                exit();
+                $mensaje = 'Cuenta creada con éxito. Redirigiendo...';
+                $tipo_mensaje = 'success';
+
+                // Redirigir después de 3 segundos con JavaScript
+                echo "<script>
+                        setTimeout(function() {
+                            window.location='index.php';
+                        }, 3000);
+                      </script>";
             } else {
                 $mensaje = $responseData['message'] ?? 'Error desconocido';
-                echo "<script>alert('Error: $mensaje');</script>";
+                $tipo_mensaje = 'error';
             }
         }
-
         curl_close($ch);
     }
 }
@@ -174,6 +183,56 @@ if (isset($_POST["btnregistrar"])) {
             background-color: #ccc;
             color: #333;
         }
+
+        /* Modal estilos */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 24px 30px;
+            border-radius: 14px;
+            text-align: center;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-content button {
+            margin-top: 16px;
+            padding: 8px 20px;
+            border: none;
+            background-color: #8000ff;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-content button:hover {
+            background-color: #5d00c1;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -203,11 +262,41 @@ if (isset($_POST["btnregistrar"])) {
     </form>
 </div>
 
+<!-- Modal -->
+<div id="modalMensaje" class="modal">
+    <div class="modal-content">
+        <p id="textoModal"></p>
+        <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
+
 <script>
     function togglePassword() {
         const pwd = document.getElementById("txtpassword");
         pwd.type = (pwd.type === "password") ? "text" : "password";
     }
+
+    function cerrarModal() {
+        document.getElementById("modalMensaje").style.display = "none";
+    }
+
+    <?php if (!empty($mensaje)): ?>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('modalMensaje');
+        const texto = document.getElementById('textoModal');
+        const botonCerrar = document.querySelector('#modalMensaje button');
+
+        texto.textContent = <?= json_encode($mensaje) ?>;
+        texto.className = <?= json_encode($tipo_mensaje) ?>;
+        modal.style.display = 'flex';
+
+        <?php if ($tipo_mensaje === 'success'): ?>
+        botonCerrar.style.display = 'none';
+        <?php else: ?>
+        botonCerrar.style.display = 'inline-block';
+        <?php endif; ?>
+    });
+    <?php endif; ?>
 </script>
 
 </body>

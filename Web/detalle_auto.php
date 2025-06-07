@@ -343,8 +343,18 @@ button:hover {
     <div class="comments-section">
         <h3 style="color: #5e2c82;">Comentarios recientes:</h3>
         <?php foreach ($comentarios as $c): ?>
-            <div class="comment-card">
-                <p><strong>Usuario:</strong> <?= htmlspecialchars($c['id']) ?></p>
+            <div class="comment-card"> <?php
+                            for ($i = 1; $i <= $c['stars']; $i++) {
+                                echo " <span style='color:#cdcd0d'>&#9733;</span>";
+                            }
+                            ?>
+                            <?php
+
+                            for ($i = 1; $i <= 5 - $c['stars']; $i++) {
+                                echo "<span style='color:#cdcdcd'>&#9733;</span>";
+                            }
+                            ?>
+                <p><strong>Usuario:</strong> <?= htmlspecialchars($c['client_name']) ?></p>
                 <p><?= htmlspecialchars($c['comment']) ?></p>
             </div>
         <?php endforeach; ?>
